@@ -10,7 +10,7 @@ with open( sys.argv[1] ) as gff3File:
 		chrom = line[0]
 		start = line[3]
 		end = line[4]
-		gene = line[8].split("=")[2]
+		gene = line[8].split("=")[1].split(";")[0].split(":")[1:3]
 		cStart = chrom + ":" + start
 		cEnd = chrom + ":" + end
 		starts[cStart] = gene
@@ -25,8 +25,9 @@ with open( sys.argv[2] ) as juncFile:
 		cStart = chrom + ":" + start
 		cEnd = chrom + ":" + end
 		if cStart in starts and cEnd in ends:
-			line.append(starts[cStart])
-			outJunc.append(line)
+		    if abs(int(starts[cStart][1]) - int(ends[cEnd][1])) > 1:
+			    line.append(starts[cStart][0])
+			    outJunc.append(line)
 
 with open( sys.argv[3], 'w' ) as outFile:
     for x in outJunc:
